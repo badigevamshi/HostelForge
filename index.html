@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HostelForge — Manipal University Jaipur</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          orange: { 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c' },
+          zinc: { 800: '#27272a', 850: '#1f1f23', 900: '#18181b', 950: '#09090b' }
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          display: ['Syne', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+* { box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #09090b; color: #f4f4f5; }
+.font-display { font-family: 'Syne', sans-serif; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #18181b; }
+::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+
+/* ── Animations ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInFast { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(24px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toastIn { from { opacity: 0; transform: translateX(40px) scale(0.96); } to { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes toastOut { from { opacity: 1; transform: translateX(0) scale(1); } to { opacity: 0; transform: translateX(40px) scale(0.96); } }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(249,115,22,0.45); } 70% { box-shadow: 0 0 0 10px rgba(249,115,22,0); } 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+@keyframes gradShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes roleSwitchIn { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+.animate-role-in { animation: roleSwitchIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards; }
+.toast-in { animation: toastIn 0.3s cubic-bezier(0.22,1,0.36,1) forwards; }
+.toast-out { animation: toastOut 0.25s ease forwards; }
+
+/* ── Cards ── */
+.card { background: #18181b; border: 1px solid #27272a; border-radius: 16px; transition: border-color 0.2s, box-shadow 0.2s; }
+.card:hover { border-color: #3f3f46; box-shadow: 0 4px 28px rgba(0,0,0,0.45); }
+
+/* ── Buttons ── */
+.btn-primary { background: linear-gradient(135deg, #f97316, #ea580c); color: white; border-radius: 10px; padding: 10px 20px; font-weight: 600; font-size: 14px; transition: all 0.2s; border: none; cursor: pointer; position: relative; overflow: hidden; }
+.btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent); opacity: 0; transition: opacity 0.2s; }
+.btn-primary:hover::after { opacity: 1; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(249,115,22,0.4); }
+.btn-primary:active { transform: translateY(0) scale(0.98); }
+
+.btn-secondary { background: #27272a; color: #a1a1aa; border-radius: 10px; padding: 10px 20px; font-weight: 500; font-size: 14px; transition: all 0.2s; border: 1px solid #3f3f46; cursor: pointer; }
+.btn-secondary:hover { background: #3f3f46; color: #f4f4f5; transform: translateY(-1px); }
+.btn-secondary:active { transform: translateY(0) scale(0.98); }
+
+/* ── Stat cards ── */
+.stat-card { position: relative; overflow: hidden; }
+.stat-card::after { content: ''; position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, rgba(249,115,22,0.06), transparent 70%); }
+
+.orange-glow { box-shadow: 0 0 0 1px rgba(249,115,22,0.25), 0 4px 28px rgba(249,115,22,0.12); }
+.pulse-orange { animation: pulse-ring 2s cubic-bezier(0.455,0.03,0.515,0.955) infinite; }
+
+/* ── Modal ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeInFast 0.2s ease; }
+.modal-box { background: #18181b; border: 1px solid #3f3f46; border-radius: 22px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.22,1,0.36,1); box-shadow: 0 32px 72px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.04); }
+.modal-box-wide { max-width: 620px; }
+.modal-header { padding: 22px 24px 0; }
+.modal-body { padding: 20px 24px; }
+.modal-footer { padding: 0 24px 22px; }
+
+/* Modal top accent bar */
+.modal-accent-bar { height: 3px; border-radius: 22px 22px 0 0; background: linear-gradient(90deg, #f97316, #dc2626, #f97316); background-size: 200% 100%; animation: gradShift 3s ease infinite; }
+
+/* ── Form ── */
+.form-input { width: 100%; background: #1f1f23; border: 1px solid #3f3f46; color: #f4f4f5; border-radius: 10px; padding: 10px 14px; font-size: 14px; transition: border-color 0.2s, box-shadow 0.2s; outline: none; font-family: 'Inter', sans-serif; }
+.form-input:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.14); background: #18181b; }
+.form-input::placeholder { color: #52525b; }
+.form-label { display: block; font-size: 12px; font-weight: 600; color: #71717a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ── Badges ── */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+.badge-green { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+.badge-yellow { background: rgba(234,179,8,0.1); color: #facc15; border: 1px solid rgba(234,179,8,0.2); }
+.badge-red { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+.badge-blue { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+.badge-orange { background: rgba(249,115,22,0.1); color: #fb923c; border: 1px solid rgba(249,115,22,0.2); }
+.badge-purple { background: rgba(168,85,247,0.1); color: #c084fc; border: 1px solid rgba(168,85,247,0.2); }
+
+/* ── Role switcher ── */
+.role-pill-wrap { background: #0d0d0f; border: 1px solid #27272a; border-radius: 14px; padding: 4px; display: inline-flex; gap: 2px; }
+.role-btn { padding: 7px 14px; border-radius: 10px; font-size: 13px; font-weight: 500; transition: all 0.22s cubic-bezier(0.22,1,0.36,1); cursor: pointer; border: none; background: transparent; color: #52525b; white-space: nowrap; position: relative; }
+.role-btn:hover:not(.active) { background: #27272a; color: #a1a1aa; }
+.role-btn.active { background: linear-gradient(135deg, rgba(249,115,22,0.18), rgba(249,115,22,0.08)); color: #f97316; box-shadow: inset 0 0 0 1px rgba(249,115,22,0.35); }
+.role-btn.active::before { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 16px; height: 2px; background: #f97316; border-radius: 2px; }
+
+/* role transition overlay flash */
+.role-flash { position: fixed; inset: 0; z-index: 30; background: rgba(249,115,22,0.04); pointer-events: none; animation: fadeInFast 0.15s ease, toastOut 0.25s ease 0.1s forwards; }
+
+/* ── Navbar ── */
+.navbar { background: rgba(9,9,11,0.9); backdrop-filter: blur(16px); border-bottom: 1px solid #1a1a1d; position: sticky; top: 0; z-index: 40; }
+
+/* ── Table ── */
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.data-table thead th { background: #1f1f23; color: #52525b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; }
+.data-table thead th:first-child { border-radius: 8px 0 0 8px; }
+.data-table thead th:last-child { border-radius: 0 8px 8px 0; }
+.data-table tbody tr { border-bottom: 1px solid #1f1f23; transition: background 0.15s; }
+.data-table tbody tr:hover { background: rgba(249,115,22,0.04); }
+.data-table tbody td { padding: 12px 16px; font-size: 14px; color: #d4d4d8; }
+
+/* ── Progress bar ── */
+.progress-bar { height: 5px; background: #27272a; border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #f97316, #fb923c); transition: width 1.2s cubic-bezier(0.22,1,0.36,1); }
+
+/* ── Action buttons ── */
+.action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (min-width: 640px) { .action-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.action-btn { background: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 20px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: all 0.22s cubic-bezier(0.22,1,0.36,1); text-align: center; position: relative; overflow: hidden; }
+.action-btn::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center bottom, rgba(249,115,22,0.08), transparent 70%); opacity: 0; transition: opacity 0.25s; }
+.action-btn:hover { border-color: rgba(249,115,22,0.5); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(249,115,22,0.14); }
+.action-btn:hover::before { opacity: 1; }
+.action-btn:active { transform: translateY(-1px) scale(0.98); }
+.action-btn .icon-wrap { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: transform 0.2s; }
+.action-btn:hover .icon-wrap { transform: scale(1.1) rotate(-5deg); }
+
+/* ── Toast ── */
+#toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.toast { background: #1a1a1d; border: 1px solid #3f3f46; border-radius: 14px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; min-width: 290px; max-width: 380px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); pointer-events: all; }
+.toast.success { border-left: 3px solid #4ade80; }
+.toast.error { border-left: 3px solid #f87171; }
+.toast.info { border-left: 3px solid #60a5fa; }
+
+/* ── Shimmer ── */
+.shimmer { background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+
+/* ── Activity ── */
+.activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 13px 0; border-bottom: 1px solid #1f1f23; transition: padding-left 0.15s; }
+.activity-item:last-child { border-bottom: none; }
+.activity-item:hover { padding-left: 4px; }
+.activity-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+
+/* ── Avatar ── */
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #dc2626); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: white; flex-shrink: 0; transition: transform 0.2s; }
+.avatar:hover { transform: scale(1.08); }
+
+/* ── Charts ── */
+.chart-wrap { position: relative; height: 220px; width: 100%; }
+
+/* ── AI card ── */
+.ai-card { background: linear-gradient(135deg, rgba(249,115,22,0.07), rgba(220,38,38,0.04)); border: 1px solid rgba(249,115,22,0.18); border-radius: 14px; padding: 16px; transition: all 0.2s; }
+.ai-card:hover { border-color: rgba(249,115,22,0.35); box-shadow: 0 4px 18px rgba(249,115,22,0.08); }
+
+/* ── Notification dot ── */
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #f97316; position: absolute; top: 4px; right: 4px; border: 2px solid #09090b; animation: pulse-ring 2.5s cubic-bezier(0.455,0.03,0.515,0.955) infinite; }
+
+/* ── Payment method toggle ── */
+.pay-method { padding: 10px 0; border-radius: 12px; font-size: 13px; font-weight: 600; border: 1px solid #3f3f46; color: #71717a; cursor: pointer; transition: all 0.2s; background: #1f1f23; }
+.pay-method:hover { border-color: rgba(249,115,22,0.4); color: #f97316; }
+.pay-method.active { border-color: rgba(249,115,22,0.5); background: rgba(249,115,22,0.08); color: #fb923c; box-shadow: 0 0 0 1px rgba(249,115,22,0.2); }
+
+/* ── Priority buttons ── */
+.prio-btn { flex: 1; padding: 9px; border-radius: 10px; font-size: 12px; font-weight: 600; border: 1px solid; cursor: pointer; transition: all 0.18s; background: transparent; }
+.prio-btn.active-low { background: rgba(34,197,94,0.12) !important; border-color: rgba(34,197,94,0.5) !important; color: #4ade80 !important; }
+.prio-btn.active-med { background: rgba(234,179,8,0.12) !important; border-color: rgba(234,179,8,0.5) !important; color: #facc15 !important; }
+.prio-btn.active-high { background: rgba(239,68,68,0.12) !important; border-color: rgba(239,68,68,0.5) !important; color: #f87171 !important; }
+
+/* ── QR code display ── */
+.qr-card { background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(59,130,246,0.04)); border: 1px solid rgba(168,85,247,0.2); border-radius: 18px; padding: 22px; text-align: center; position: relative; overflow: hidden; }
+.qr-card::before { content: ''; position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(168,85,247,0.1), transparent 70%); }
+
+/* ── Step indicator for payment ── */
+.step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.step-dot.done { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.step-dot.active { background: rgba(249,115,22,0.15); color: #f97316; border: 1px solid rgba(249,115,22,0.4); }
+.step-dot.pending { background: #1f1f23; color: #52525b; border: 1px solid #3f3f46; }
+
+/* ── Success animation ── */
+@keyframes successPop { 0% { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+.success-icon { animation: successPop 0.4s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+/* ── Info note ── */
+.note-box { background: #1f1f23; border: 1px solid #3f3f46; border-radius: 12px; padding: 12px 14px; }
+
+/* ── Insight metric bar ── */
+.insight-bar { height: 4px; background: #27272a; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+.insight-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #f97316, #fb923c); }
+
+/* ── Spinner ── */
+.spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.2); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; }
+
+.hidden { display: none !important; }
+
+/* ── Upload zone ── */
+.upload-zone { border: 2px dashed #3f3f46; border-radius: 12px; padding: 22px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.upload-zone:hover { border-color: rgba(249,115,22,0.5); background: rgba(249,115,22,0.03); }
+
+/* ── Section divider ── */
+.section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #52525b; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: #27272a; }
+
+/* ── Warden alert chip ── */
+.alert-chip { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #1f1f23; border: 1px solid #2d2d30; border-radius: 12px; transition: all 0.18s; }
+.alert-chip:hover { border-color: #3f3f46; background: #27272a; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ═══════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #f97316, #dc2626);">
+        <i class="fa-solid fa-building-columns text-white text-sm"></i>
+      </div>
+      <div>
+        <div class="font-display font-extrabold text-white text-lg leading-none">HostelForge</div>
+        <div class="text-xs text-zinc-600 leading-none mt-0.5">Manipal University Jaipur</div>
+      </div>
+    </div>
+
+    <!-- Role Switcher — desktop -->
+    <div class="role-pill-wrap hidden sm:inline-flex">
+      <button class="role-btn active" onclick="switchRole('student')" id="btn-student">
+        <i class="fa-solid fa-graduation-cap mr-1.5 text-xs"></i>Student
+      </button>
+      <button class="role-btn" onclick="switchRole('warden')" id="btn-warden">
+        <i class="fa-solid fa-shield-halved mr-1.5 text-xs"></i>Warden
+      </button>
+      <button class="role-btn" onclick="switchRole('parent')" id="btn-parent">
+        <i class="fa-solid fa-house-user mr-1.5 text-xs"></i>Parent
+      </button>
+    </div>
+
+    <!-- Right: bell + avatar -->
+    <div class="flex items-center gap-3">
+      <button class="relative w-9 h-9 bg-zinc-900 hover:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white transition-all hover:scale-105" onclick="showToast('3 new notifications', 'info')">
+        <i class="fa-regular fa-bell text-sm"></i>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="avatar cursor-pointer" id="nav-avatar" title="View Profile">AR</div>
+    </div>
+  </div>
+
+  <!-- Mobile role switcher -->
+  <div class="flex sm:hidden items-center gap-1 px-4 pb-3 overflow-x-auto">
+    <div class="role-pill-wrap flex">
+      <button class="role-btn active flex-shrink-0" onclick="switchRole('student')" id="btn-student-m">
+        <i class="fa-solid fa-graduation-cap mr-1.5 text-xs"></i>Student
+      </button>
+      <button class="role-btn flex-shrink-0" onclick="switchRole('warden')" id="btn-warden-m">
+        <i class="fa-solid fa-shield-halved mr-1.5 text-xs"></i>Warden
+      </button>
+      <button class="role-btn flex-shrink-0" onclick="switchRole('parent')" id="btn-parent-m">
+        <i class="fa-solid fa-house-user mr-1.5 text-xs"></i>Parent
+      </button>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════ -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+  <!-- ════════════════════════════
+       STUDENT DASHBOARD
+  ════════════════════════════ -->
+  <div id="dashboard-student" class="animate-fade-in">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <p class="text-zinc-500 text-sm mb-1">Welcome back 👋</p>
+        <h1 class="font-display text-2xl sm:text-3xl font-bold text-white">Arjun Rathore</h1>
+        <p class="text-zinc-400 text-sm mt-1.5">
+          <span class="text-orange-400 font-semibold">Room 214</span>
+          <span class="text-zinc-700 mx-2">·</span>Block C
+          <span class="text-zinc-700 mx-2">·</span>B.Tech CSE · Sem 4
+        </p>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="badge badge-green text-xs"><i class="fa-solid fa-circle" style="font-size:7px"></i> Checked In</span>
+        <button class="btn-primary" onclick="openModal('gatepass')">
+          <i class="fa-solid fa-qrcode mr-2"></i>Gate Pass
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="card stat-card p-5 hover:orange-glow" style="transition: all 0.25s;">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Fees Due</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: rgba(249,115,22,0.12);">
+            <i class="fa-solid fa-indian-rupee-sign text-orange-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">₹18,400</div>
+        <div class="text-xs text-red-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i>Due Jul 15</div>
+      </div>
+
+      <div class="card stat-card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Attendance</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: rgba(34,197,94,0.1);">
+            <i class="fa-solid fa-calendar-check text-green-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">92%</div>
+        <div class="text-xs text-green-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i>2% vs last month</div>
+      </div>
+
+      <div class="card stat-card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Complaints</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: rgba(234,179,8,0.1);">
+            <i class="fa-solid fa-comment-dots text-yellow-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">2</div>
+        <div class="text-xs text-yellow-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-clock"></i>1 pending</div>
+      </div>
+
+      <div class="card stat-card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Leave Days</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: rgba(59,130,246,0.1);">
+            <i class="fa-solid fa-plane-departure text-blue-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">5</div>
+        <div class="text-xs text-zinc-500 mt-1.5">Used this semester</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card p-6 mb-6">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="font-semibold text-white flex items-center gap-2.5">
+          <span class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+            <i class="fa-solid fa-bolt text-orange-400 text-xs"></i>
+          </span>Quick Actions
+        </h2>
+        <span class="text-xs text-zinc-600">Tap to open</span>
+      </div>
+      <div class="action-grid">
+        <button class="action-btn" onclick="openModal('complaint')">
+          <div class="icon-wrap" style="background: rgba(239,68,68,0.12);">
+            <i class="fa-solid fa-triangle-exclamation text-red-400"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">Raise Complaint</p>
+            <p class="text-xs text-zinc-600 mt-0.5">Report an issue</p>
+          </div>
+        </button>
+        <button class="action-btn" onclick="openModal('leave')">
+          <div class="icon-wrap" style="background: rgba(59,130,246,0.12);">
+            <i class="fa-solid fa-plane text-blue-400"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">Request Leave</p>
+            <p class="text-xs text-zinc-600 mt-0.5">Weekend / home</p>
+          </div>
+        </button>
+        <button class="action-btn" onclick="openModal('gatepass')">
+          <div class="icon-wrap" style="background: rgba(168,85,247,0.12);">
+            <i class="fa-solid fa-qrcode text-purple-400"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">Gate Pass</p>
+            <p class="text-xs text-zinc-600 mt-0.5">One-time exit pass</p>
+          </div>
+        </button>
+        <button class="action-btn" onclick="openModal('payment')">
+          <div class="icon-wrap" style="background: rgba(34,197,94,0.12);">
+            <i class="fa-solid fa-credit-card text-green-400"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">Pay Fees</p>
+            <p class="text-xs text-zinc-600 mt-0.5">₹18,400 due</p>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Activity Feed -->
+      <div class="card p-6 lg:col-span-2">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="font-semibold text-white flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+              <i class="fa-solid fa-clock-rotate-left text-orange-400 text-xs"></i>
+            </span>Recent Activity
+          </h2>
+          <button class="text-xs text-zinc-500 hover:text-orange-400 transition-colors font-medium">View all →</button>
+        </div>
+        <div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#4ade80"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Gate pass approved</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Out-pass #GP-4821 approved by Warden Singh</p>
+              <p class="text-xs text-zinc-600 mt-0.5">Today · 9:15 AM</p>
+            </div>
+            <span class="badge badge-green text-xs">Done</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#facc15"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Complaint under review</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Water leakage — Room 214 bathroom</p>
+              <p class="text-xs text-zinc-600 mt-0.5">Jun 11</p>
+            </div>
+            <span class="badge badge-yellow text-xs">Pending</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#60a5fa"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Fee reminder sent</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Hostel fee due Jul 15 · ₹18,400</p>
+              <p class="text-xs text-zinc-600 mt-0.5">Jun 10</p>
+            </div>
+            <span class="badge badge-blue text-xs">Info</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#4ade80"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Leave approved</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Jun 5–7 (3 days) · Home visit</p>
+              <p class="text-xs text-zinc-600 mt-0.5">Jun 4</p>
+            </div>
+            <span class="badge badge-green text-xs">Done</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#f87171"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Late check-in recorded</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Returned 11:42 PM · Curfew 10:30 PM</p>
+              <p class="text-xs text-zinc-600 mt-0.5">Jun 3</p>
+            </div>
+            <span class="badge badge-red text-xs">Alert</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room + Mess -->
+      <div class="flex flex-col gap-4">
+        <div class="card p-5">
+          <h3 class="font-semibold text-white mb-4 text-sm flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+              <i class="fa-solid fa-door-open text-orange-400 text-xs"></i>
+            </span>Room Details
+          </h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-zinc-500">Room</span><span class="text-zinc-200 font-medium">214 – Block C</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-zinc-500">Type</span><span class="text-zinc-200 font-medium">Double Sharing</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-zinc-500">Roommate</span><span class="text-zinc-200 font-medium">Siddharth Jain</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-zinc-500">Floor</span><span class="text-zinc-200 font-medium">2nd</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-zinc-500">AC / WiFi</span><span class="badge badge-green text-xs">Active</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-5">
+          <h3 class="font-semibold text-white mb-4 text-sm flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+              <i class="fa-solid fa-utensils text-orange-400 text-xs"></i>
+            </span>Today's Mess Menu
+          </h3>
+          <div class="space-y-3">
+            <div>
+              <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Lunch</p>
+              <p class="text-sm text-zinc-300 leading-relaxed">Dal Tadka · Roti · Jeera Rice · Aloo Sabzi · Salad</p>
+            </div>
+            <div class="border-t border-zinc-800 pt-3">
+              <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Dinner</p>
+              <p class="text-sm text-zinc-300 leading-relaxed">Rajma · Naan · Pulao · Raita · Kheer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════
+       WARDEN DASHBOARD
+  ════════════════════════════ -->
+  <div id="dashboard-warden" class="hidden animate-fade-in">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-xs text-zinc-600 font-medium uppercase tracking-wide">Admin Panel</span>
+          <span class="badge badge-green text-xs"><i class="fa-solid fa-circle" style="font-size:6px"></i> Live</span>
+        </div>
+        <h1 class="font-display text-2xl sm:text-3xl font-bold text-white">Warden Dashboard</h1>
+        <p class="text-zinc-400 text-sm mt-1.5">Block C &nbsp;·&nbsp; <span class="text-white font-medium">Dr. Raghav Singh</span> &nbsp;·&nbsp; <span class="text-orange-400">Updates On</span></p>
+      </div>
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <button class="btn-secondary" onclick="showToast('Report exported as PDF', 'success')">
+          <i class="fa-solid fa-download mr-2"></i>Export Report
+        </button>
+        <button class="btn-primary pulse-orange" onclick="openModal('aiinsight')">
+          <i class="fa-solid fa-robot mr-2"></i>AI Smart Insights
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="card p-5 stat-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Occupancy</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+            <i class="fa-solid fa-bed text-orange-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">312 <span class="text-base text-zinc-600">/ 360</span></div>
+        <div class="mt-2.5"><div class="progress-bar"><div class="progress-fill" style="width:86.6%"></div></div></div>
+        <div class="text-xs text-zinc-500 mt-1.5">86.6% occupied</div>
+      </div>
+
+      <div class="card p-5 stat-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Open Complaints</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(239,68,68,0.1)">
+            <i class="fa-solid fa-flag text-red-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">14</div>
+        <div class="text-xs text-red-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i>3 urgent</div>
+      </div>
+
+      <div class="card p-5 stat-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Leaves Today</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(59,130,246,0.1)">
+            <i class="fa-solid fa-user-clock text-blue-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">8</div>
+        <div class="text-xs text-zinc-500 mt-1.5">Pending: <span class="text-yellow-400 font-semibold">5</span></div>
+      </div>
+
+      <div class="card p-5 stat-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wide">Fees Collected</span>
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(34,197,94,0.1)">
+            <i class="fa-solid fa-sack-dollar text-green-400 text-sm"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-bold text-white">₹28.4L</div>
+        <div class="text-xs text-green-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-arrow-up"></i>72% target</div>
+      </div>
+    </div>
+
+    <!-- Chart + Complaints -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+      <div class="card p-6 lg:col-span-3">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-semibold text-white flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-orange-400"></i> Occupancy Trend
+          </h2>
+          <span class="badge badge-orange text-xs">Last 7 days</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="occupancyChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card p-6 lg:col-span-2">
+        <h2 class="font-semibold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-orange-400"></i> Complaints by Type
+        </h2>
+        <div class="chart-wrap" style="height:160px">
+          <canvas id="complaintsChart"></canvas>
+        </div>
+        <div class="mt-4 space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#f97316"></span><span class="text-zinc-400">Plumbing</span></span>
+            <span class="text-zinc-300 font-medium">5 (36%)</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#60a5fa"></span><span class="text-zinc-400">Electrical</span></span>
+            <span class="text-zinc-300 font-medium">4 (29%)</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#4ade80"></span><span class="text-zinc-400">WiFi / IT</span></span>
+            <span class="text-zinc-300 font-medium">3 (21%)</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#c084fc"></span><span class="text-zinc-400">Other</span></span>
+            <span class="text-zinc-300 font-medium">2 (14%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Table + Complaints -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="card p-6 lg:col-span-2">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-semibold text-white flex items-center gap-2">
+            <i class="fa-solid fa-table text-orange-400"></i> Room Allocation
+          </h2>
+          <button class="btn-secondary text-xs px-3 py-2" onclick="showToast('CSV export started', 'info')">
+            <i class="fa-solid fa-file-csv mr-1.5"></i>Export CSV
+          </button>
+        </div>
+        <div class="overflow-x-auto rounded-xl">
+          <table class="data-table">
+            <thead>
+              <tr><th>Room</th><th>Occupant</th><th>Status</th><th>Type</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-semibold text-white">C-101</td>
+                <td><div class="flex items-center gap-2"><div class="avatar" style="width:26px;height:26px;font-size:10px">RK</div><span>Rohan Kumar</span></div></td>
+                <td><span class="badge badge-green">Occupied</span></td>
+                <td class="text-zinc-500">Single</td>
+                <td><button class="btn-secondary text-xs px-3 py-1.5" onclick="showToast('Room C-101 details loaded', 'info')"><i class="fa-solid fa-eye mr-1"></i>View</button></td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">C-102</td>
+                <td><div class="flex items-center gap-2"><div class="avatar" style="width:26px;height:26px;font-size:10px">AM</div><span>Aarav Mehta</span></div></td>
+                <td><span class="badge badge-green">Occupied</span></td>
+                <td class="text-zinc-500">Double</td>
+                <td><button class="btn-secondary text-xs px-3 py-1.5" onclick="showToast('Room C-102 details loaded', 'info')"><i class="fa-solid fa-eye mr-1"></i>View</button></td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">C-107</td>
+                <td><span class="text-zinc-600 text-xs italic">Unallocated</span></td>
+                <td><span class="badge badge-red">Vacant</span></td>
+                <td class="text-zinc-500">Double</td>
+                <td><button class="btn-primary text-xs px-3 py-1.5" onclick="showToast('Room C-107 allocated!', 'success')"><i class="fa-solid fa-plus mr-1"></i>Allocate</button></td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">C-210</td>
+                <td><div class="flex items-center gap-2"><div class="avatar" style="width:26px;height:26px;font-size:10px">SV</div><span>Shruti Verma</span></div></td>
+                <td><span class="badge badge-yellow">Maintenance</span></td>
+                <td class="text-zinc-500">Single</td>
+                <td><button class="btn-secondary text-xs px-3 py-1.5" onclick="showToast('Ticket opened', 'info')"><i class="fa-solid fa-wrench mr-1"></i>Resolve</button></td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">C-214</td>
+                <td><div class="flex items-center gap-2"><div class="avatar" style="width:26px;height:26px;font-size:10px">AR</div><span>Arjun Rathore</span></div></td>
+                <td><span class="badge badge-green">Occupied</span></td>
+                <td class="text-zinc-500">Double</td>
+                <td><button class="btn-secondary text-xs px-3 py-1.5" onclick="showToast('Room C-214 details loaded', 'info')"><i class="fa-solid fa-eye mr-1"></i>View</button></td>
+              </tr>
+              <tr>
+                <td class="font-semibold text-white">C-301</td>
+                <td><span class="text-zinc-600 text-xs italic">Unallocated</span></td>
+                <td><span class="badge badge-red">Vacant</span></td>
+                <td class="text-zinc-500">Triple</td>
+                <td><button class="btn-primary text-xs px-3 py-1.5" onclick="showToast('Room C-301 allocated!', 'success')"><i class="fa-solid fa-plus mr-1"></i>Allocate</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Complaints -->
+      <div class="card p-6">
+        <h2 class="font-semibold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-comment-dots text-orange-400"></i> Recent Complaints
+        </h2>
+        <div class="space-y-3">
+          <div class="bg-zinc-900 rounded-xl p-3 border border-zinc-800 hover:border-red-500/30 transition-all">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-sm font-semibold text-zinc-100">Water Leakage</p>
+                <p class="text-xs text-zinc-500 mt-0.5">Room 214 · Arjun R.</p>
+              </div>
+              <span class="badge badge-red flex-shrink-0">Urgent</span>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="btn-primary text-xs px-3 py-1.5 flex-1" onclick="showToast('Assigned to maintenance team', 'success')">Assign</button>
+              <button class="btn-secondary text-xs px-3 py-1.5" onclick="showToast('Complaint dismissed', 'info')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+
+          <div class="bg-zinc-900 rounded-xl p-3 border border-zinc-800 hover:border-yellow-500/30 transition-all">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-sm font-semibold text-zinc-100">WiFi Down</p>
+                <p class="text-xs text-zinc-500 mt-0.5">Block C Floor 2 · Multiple</p>
+              </div>
+              <span class="badge badge-yellow flex-shrink-0">Open</span>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="btn-primary text-xs px-3 py-1.5 flex-1" onclick="showToast('IT team notified', 'success')">Assign</button>
+              <button class="btn-secondary text-xs px-3 py-1.5" onclick="showToast('Complaint dismissed', 'info')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+
+          <div class="bg-zinc-900 rounded-xl p-3 border border-zinc-800 hover:border-blue-500/30 transition-all">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-sm font-semibold text-zinc-100">AC Not Working</p>
+                <p class="text-xs text-zinc-500 mt-0.5">Room 310 · Priya S.</p>
+              </div>
+              <span class="badge badge-blue flex-shrink-0">In Progress</span>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="btn-primary text-xs px-3 py-1.5 flex-1" onclick="showToast('Marked as resolved', 'success')">Resolve</button>
+              <button class="btn-secondary text-xs px-3 py-1.5" onclick="showToast('Complaint dismissed', 'info')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+
+          <button class="w-full text-xs text-orange-400 hover:text-orange-300 font-medium py-2.5 transition-colors flex items-center justify-center gap-1.5 rounded-xl hover:bg-orange-500/5" onclick="showToast('Loading all 14 complaints...', 'info')">
+            View all 14 complaints <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════
+       PARENT DASHBOARD
+  ════════════════════════════ -->
+  <div id="dashboard-parent" class="hidden animate-fade-in">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <p class="text-zinc-500 text-sm mb-1">Parent / Guardian View</p>
+        <h1 class="font-display text-2xl sm:text-3xl font-bold text-white">Hello, Mr. Rathore</h1>
+        <p class="text-zinc-400 text-sm mt-1.5">Monitoring ward: <span class="text-orange-400 font-semibold">Arjun Rathore</span></p>
+      </div>
+      <button class="btn-primary" onclick="openModal('parentai')">
+        <i class="fa-solid fa-sparkles mr-2"></i>AI Weekly Summary
+      </button>
+    </div>
+
+    <!-- Ward Status Card -->
+    <div class="card p-6 mb-6 orange-glow">
+      <div class="section-label mb-4">Ward Overview</div>
+      <div class="flex flex-col sm:flex-row gap-6">
+        <div class="flex-shrink-0 flex flex-col items-center gap-3">
+          <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white" style="background: linear-gradient(135deg, #f97316, #dc2626);">AR</div>
+          <span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:7px"></i> In Hostel</span>
+        </div>
+        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div>
+            <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Name</p>
+            <p class="text-sm font-semibold text-zinc-100">Arjun Rathore</p>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Roll No.</p>
+            <p class="text-sm font-semibold text-zinc-100">221B0053</p>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Room</p>
+            <p class="text-sm font-semibold text-zinc-100">C-214, Block C</p>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Last Check-In</p>
+            <p class="text-sm font-semibold text-zinc-100">Today, 8:32 AM</p>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Attendance</p>
+            <p class="text-sm font-semibold text-green-400">92% ↑</p>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-600 font-semibold uppercase tracking-wide mb-1.5">Fees Status</p>
+            <p class="text-sm font-semibold text-red-400">₹18,400 Due</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity + Wellness -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <!-- Movement Log -->
+      <div class="card p-6">
+        <h2 class="font-semibold text-white mb-5 flex items-center gap-2.5">
+          <span class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+            <i class="fa-solid fa-route text-orange-400 text-xs"></i>
+          </span>Gate Movement Log
+        </h2>
+        <div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#4ade80"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Check-In</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Today · 8:32 AM · Main Gate</p>
+            </div>
+            <span class="badge badge-green text-xs">IN</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#f87171"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Check-Out</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Yesterday · 6:00 PM · Gate Pass GP-4821</p>
+            </div>
+            <span class="badge badge-red text-xs">OUT</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#4ade80"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Check-In</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Yesterday · 10:15 PM · Main Gate</p>
+            </div>
+            <span class="badge badge-green text-xs">IN</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:#60a5fa"></div>
+            <div class="flex-1">
+              <p class="text-sm text-zinc-200 font-medium">Weekend Leave</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Jun 5–7 · Home visit approved</p>
+            </div>
+            <span class="badge badge-blue text-xs">LEAVE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wellness + Alerts -->
+      <div class="flex flex-col gap-4">
+        <div class="card p-5">
+          <h3 class="font-semibold text-white mb-4 text-sm flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+              <i class="fa-solid fa-heart-pulse text-orange-400 text-xs"></i>
+            </span>Wellbeing Snapshot
+          </h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs mb-2"><span class="text-zinc-400">Mess attendance</span><span class="text-zinc-200 font-semibold">88%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-2"><span class="text-zinc-400">On-time check-ins</span><span class="text-zinc-200 font-semibold">94%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-2"><span class="text-zinc-400">Complaint resolution</span><span class="text-zinc-200 font-semibold">67%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:67%; background: linear-gradient(90deg, #facc15, #fb923c)"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-5">
+          <h3 class="font-semibold text-white mb-4 text-sm flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:rgba(249,115,22,0.12)">
+              <i class="fa-solid fa-bell text-orange-400 text-xs"></i>
+            </span>Parent Alerts
+          </h3>
+          <div class="space-y-3">
+            <div class="ai-card">
+              <p class="text-xs font-semibold text-orange-300 flex items-center gap-1.5"><i class="fa-solid fa-indian-rupee-sign"></i>Fee Reminder</p>
+              <p class="text-xs text-zinc-400 mt-1.5">₹18,400 due by July 15, 2026. Pay via Student Portal.</p>
+            </div>
+            <div class="note-box">
+              <p class="text-xs font-semibold text-green-400 flex items-center gap-1.5"><i class="fa-solid fa-shield-check"></i>All Clear</p>
+              <p class="text-xs text-zinc-400 mt-1.5">No disciplinary issues this month.</p>
+            </div>
+          </div>
+          <button class="w-full mt-4 btn-secondary text-xs py-2.5" onclick="showToast('Feedback form opened', 'info')">
+            <i class="fa-solid fa-comment mr-1.5"></i>Send Feedback to Warden
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="border-t border-zinc-900 mt-16 py-6 text-center">
+  <p class="text-zinc-600 text-sm">
+    <span class="text-orange-500 font-semibold">HostelForge</span> · Manipal University Jaipur
+    &nbsp;·&nbsp; Built for <span class="text-orange-400 font-medium">WebForge 2026</span>
+    &nbsp;·&nbsp; <i class="fa-solid fa-code text-zinc-700"></i> with <i class="fa-solid fa-heart text-red-500" style="opacity:0.6"></i>
+  </p>
+</footer>
+
+
+<!-- ═══════════════════════════════════════
+     TOAST CONTAINER
+═══════════════════════════════════════ -->
+<div id="toast-container"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODALS
+═══════════════════════════════════════════════════════════ -->
+
+<!-- ══ RAISE COMPLAINT MODAL ══ -->
+<div id="modal-complaint" class="modal-overlay hidden" onclick="outsideClick(event,'complaint')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-accent-bar" style="background:linear-gradient(90deg,#f87171,#ef4444,#f87171);background-size:200% 100%;animation:gradShift 3s ease infinite;"></div>
+    <div class="modal-header">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(239,68,68,0.12);">
+            <i class="fa-solid fa-triangle-exclamation text-red-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-semibold text-white text-base">Raise a Complaint</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">Forwarded to warden within minutes</p>
+          </div>
+        </div>
+        <button onclick="closeModal('complaint')" class="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all hover:rotate-90" style="transition:all 0.2s">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="form-label">Category</label>
+            <select class="form-input" id="c-category">
+              <option value="">Select issue type</option>
+              <option>Plumbing / Water</option>
+              <option>Electrical</option>
+              <option>WiFi / Internet</option>
+              <option>AC / Heating</option>
+              <option>Cleanliness</option>
+              <option>Security</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Location</label>
+            <input type="text" class="form-input" id="c-location" placeholder="e.g. Room 214 bathroom" />
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">Priority Level</label>
+          <div class="flex gap-2">
+            <button class="prio-btn" style="border-color: rgba(34,197,94,0.3); color: #4ade80;" onclick="setPriority(this,'low')">
+              <i class="fa-solid fa-circle-arrow-down mr-1"></i>Low
+            </button>
+            <button class="prio-btn active-med" style="border-color: rgba(234,179,8,0.4); color: #facc15; background:rgba(234,179,8,0.1);" onclick="setPriority(this,'medium')">
+              <i class="fa-solid fa-circle-minus mr-1"></i>Medium
+            </button>
+            <button class="prio-btn" style="border-color: rgba(239,68,68,0.3); color: #f87171;" onclick="setPriority(this,'high')">
+              <i class="fa-solid fa-circle-arrow-up mr-1"></i>High
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">Description</label>
+          <textarea class="form-input" id="c-desc" rows="3" placeholder="Describe the issue in detail — the more specific, the faster it gets resolved..."></textarea>
+        </div>
+
+        <div>
+          <label class="form-label">Attach Photo <span class="text-zinc-600 font-normal normal-case">(optional)</span></label>
+          <div class="upload-zone">
+            <i class="fa-solid fa-cloud-arrow-up text-zinc-500 text-2xl mb-2"></i>
+            <p class="text-xs text-zinc-500">Click to upload or drag & drop</p>
+            <p class="text-xs text-zinc-700 mt-1">PNG, JPG · max 5 MB</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="flex gap-3">
+        <button class="btn-secondary flex-1" onclick="closeModal('complaint')">Cancel</button>
+        <button class="btn-primary flex-1" onclick="submitForm('complaint')">
+          <i class="fa-solid fa-paper-plane mr-2"></i>Submit Complaint
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ LEAVE REQUEST MODAL ══ -->
+<div id="modal-leave" class="modal-overlay hidden" onclick="outsideClick(event,'leave')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-accent-bar" style="background:linear-gradient(90deg,#60a5fa,#3b82f6,#60a5fa);background-size:200%;animation:gradShift 3s ease infinite;"></div>
+    <div class="modal-header">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(59,130,246,0.12);">
+            <i class="fa-solid fa-plane text-blue-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-semibold text-white text-base">Request Leave</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">Warden approval · SMS sent to parent on approve</p>
+          </div>
+        </div>
+        <button onclick="closeModal('leave')" class="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all" style="transition:all 0.2s">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="form-label">From Date</label>
+            <input type="date" class="form-input" id="l-from" />
+          </div>
+          <div>
+            <label class="form-label">To Date</label>
+            <input type="date" class="form-input" id="l-to" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="form-label">Leave Type</label>
+            <select class="form-input" id="l-type">
+              <option>Home Visit</option>
+              <option>Medical</option>
+              <option>Family Emergency</option>
+              <option>Event / Competition</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Destination</label>
+            <input type="text" class="form-input" id="l-dest" placeholder="e.g. Jaipur (Home)" />
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">Parent / Guardian Contact</label>
+          <input type="tel" class="form-input" id="l-contact" placeholder="+91 98765 43210" />
+        </div>
+
+        <div>
+          <label class="form-label">Reason</label>
+          <textarea class="form-input" id="l-reason" rows="2" placeholder="Brief reason for leave..."></textarea>
+        </div>
+
+        <div class="note-box flex items-start gap-2.5">
+          <i class="fa-solid fa-circle-info text-orange-400 mt-0.5 text-sm flex-shrink-0"></i>
+          <p class="text-xs text-zinc-400">An SMS will be sent to your parent's registered number upon warden approval. Leaves must be applied at least 6 hours in advance.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="flex gap-3">
+        <button class="btn-secondary flex-1" onclick="closeModal('leave')">Cancel</button>
+        <button class="btn-primary flex-1" onclick="submitForm('leave')">
+          <i class="fa-solid fa-check mr-2"></i>Submit Request
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ GATE PASS MODAL ══ -->
+<div id="modal-gatepass" class="modal-overlay hidden" onclick="outsideClick(event,'gatepass')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-accent-bar" style="background:linear-gradient(90deg,#c084fc,#a855f7,#c084fc);background-size:200%;animation:gradShift 3s ease infinite;"></div>
+    <div class="modal-header">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(168,85,247,0.12);">
+            <i class="fa-solid fa-qrcode text-purple-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-semibold text-white text-base">Digital Gate Pass</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">Generate a one-time QR exit pass</p>
+          </div>
+        </div>
+        <button onclick="closeModal('gatepass')" class="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all" style="transition:all 0.2s">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <!-- QR preview card -->
+      <div class="qr-card mb-5">
+        <div id="fake-qr" class="mx-auto mb-3" style="width:84px;height:84px;"></div>
+        <p class="font-mono text-base font-bold text-purple-300 tracking-widest">GP-4822</p>
+        <p class="text-xs text-zinc-500 mt-1">Valid until 11:00 PM tonight</p>
+        <div class="flex items-center justify-center gap-4 mt-3">
+          <span class="flex items-center gap-1.5 text-xs text-zinc-500"><i class="fa-solid fa-user text-purple-400/60"></i>Arjun Rathore</span>
+          <span class="flex items-center gap-1.5 text-xs text-zinc-500"><i class="fa-solid fa-door-open text-purple-400/60"></i>Room C-214</span>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="form-label">Exit Time</label>
+            <input type="time" class="form-input" id="gp-exit" value="18:00" />
+          </div>
+          <div>
+            <label class="form-label">Return Time</label>
+            <input type="time" class="form-input" id="gp-return" value="22:30" />
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Destination</label>
+          <input type="text" class="form-input" id="gp-dest" placeholder="e.g. V-Mart Mall, Jaipur" />
+        </div>
+        <div>
+          <label class="form-label">Purpose</label>
+          <select class="form-input" id="gp-purpose">
+            <option>Personal</option>
+            <option>Medical</option>
+            <option>Academic</option>
+            <option>Shopping</option>
+            <option>Sports / Event</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="flex gap-3">
+        <button class="btn-secondary flex-1" onclick="closeModal('gatepass')">Cancel</button>
+        <button class="btn-primary flex-1" onclick="submitForm('gatepass')">
+          <i class="fa-solid fa-qrcode mr-2"></i>Generate Pass
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ PAYMENT MODAL ══ -->
+<div id="modal-payment" class="modal-overlay hidden" onclick="outsideClick(event,'payment')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-accent-bar" style="background:linear-gradient(90deg,#4ade80,#22c55e,#4ade80);background-size:200%;animation:gradShift 3s ease infinite;"></div>
+    <div class="modal-header">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(34,197,94,0.12);">
+            <i class="fa-solid fa-credit-card text-green-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-semibold text-white text-base">Pay Hostel Fees</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">Secure payment via HostelForge Pay</p>
+          </div>
+        </div>
+        <button onclick="closeModal('payment')" class="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all" style="transition:all 0.2s">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <!-- Invoice -->
+      <div class="bg-zinc-900 rounded-xl p-4 mb-5 border border-zinc-800">
+        <div class="section-label mb-3">Invoice #HF-2026-0614</div>
+        <div class="space-y-2.5">
+          <div class="flex justify-between text-sm"><span class="text-zinc-400">Hostel Rent (Jul–Sep)</span><span class="text-zinc-200">₹15,000</span></div>
+          <div class="flex justify-between text-sm"><span class="text-zinc-400">Mess Charges</span><span class="text-zinc-200">₹3,000</span></div>
+          <div class="flex justify-between text-sm"><span class="text-zinc-400">Maintenance Fee</span><span class="text-zinc-200">₹400</span></div>
+          <div class="border-t border-zinc-700 pt-3 flex justify-between font-bold text-base">
+            <span class="text-zinc-100">Total Due</span>
+            <span class="text-orange-400">₹18,400</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="form-label">Payment Method</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="pay-method active" onclick="selectPayMethod(this)">
+              <i class="fa-solid fa-mobile-alt block text-lg mb-1"></i>UPI
+            </button>
+            <button class="pay-method" onclick="selectPayMethod(this)">
+              <i class="fa-solid fa-credit-card block text-lg mb-1"></i>Card
+            </button>
+            <button class="pay-method" onclick="selectPayMethod(this)">
+              <i class="fa-solid fa-building-columns block text-lg mb-1"></i>Net Banking
+            </button>
+          </div>
+        </div>
+
+        <div id="upi-field">
+          <label class="form-label">UPI ID</label>
+          <div class="relative">
+            <input type="text" class="form-input" placeholder="yourname@upi" style="padding-right:40px" />
+            <i class="fa-solid fa-at text-zinc-600 absolute right-3 top-1/2 -translate-y-1/2 text-sm"></i>
+          </div>
+        </div>
+
+        <div class="note-box flex items-start gap-2.5">
+          <i class="fa-solid fa-shield-check text-green-400 mt-0.5 flex-shrink-0"></i>
+          <p class="text-xs text-zinc-400">256-bit SSL encrypted. Your payment details are never stored on our servers.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="flex gap-3">
+        <button class="btn-secondary flex-1" onclick="closeModal('payment')">Cancel</button>
+        <button class="btn-primary flex-1" id="pay-btn" onclick="submitForm('payment')">
+          <i class="fa-solid fa-lock mr-2"></i>Pay ₹18,400
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ AI SMART INSIGHTS MODAL (WARDEN) ══ -->
+<div id="modal-aiinsight" class="modal-overlay hidden" onclick="outsideClick(event,'aiinsight')">
+  <div class="modal-box modal-box-wide" onclick="event.stopPropagation()">
+    <div class="modal-accent-bar" style="background:linear-gradient(90deg,#f97316,#a855f7,#f97316);background-size:200%;animation:gradShift 4s ease infinite;"></div>
+    <div class="modal-header">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(168,85,247,0.15));">
+            <i class="fa-solid fa-robot text-orange-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-semibold text-white text-base">AI Smart Insights</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">HostelForge Predictive Analytics · Updated 5 min ago</p>
+          </div>
+        </div>
+        <button onclick="closeModal('aiinsight')" class="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all" style="transition:all 0.2s">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+
+      <!-- AI Summary banner -->
+      <div class="rounded-xl p-4 mb-5" style="background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(168,85,247,0.06)); border: 1px solid rgba(249,115,22,0.22);">
+        <div class="flex items-start gap-3">
+          <i class="fa-solid fa-sparkles text-orange-400 mt-0.5 flex-shrink-0"></i>
+          <p class="text-sm text-zinc-200 leading-relaxed">
+            <strong class="text-white">Weekly Summary:</strong> Block C is at <span class="text-orange-400 font-semibold">86.6% capacity</span>, up 3.2% from last week. Complaint resolution time improved by <span class="text-green-400 font-semibold">18%</span>. Fee collection on track — target hit by <span class="text-orange-400">July 20</span> if current pace holds.
+          </p>
+        </div>
+      </div>
+
+      <!-- Metric pills -->
+      <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="note-box text-center">
+          <p class="text-lg font-bold text-white">86.6%</p>
+          <p class="text-xs text-zinc-500 mt-0.5">Occupancy</p>
+          <div class="insight-bar mt-1.5"><div class="insight-bar-fill" style="width:86.6%"></div></div>
+        </div>
+        <div class="note-box text-center">
+          <p class="text-lg font-bold text-green-400">72%</p>
+          <p class="text-xs text-zinc-500 mt-0.5">Fee Target</p>
+          <div class="insight-bar mt-1.5"><div class="insight-bar-fill" style="width:72%;background:linear-gradient(90deg,#4ade80,#22c55e)"></div></div>
+        </div>
+        <div class="note-box text-center">
+          <p class="text-lg font-bold text-yellow-400">14</p>
+          <p class="text-xs text-zinc-500 mt-0.5">Open Issues</p>
+          <div class="insight-bar mt-1.5"><div class="insight-bar-fill" style="width:40%;background:linear-gradient(90deg,#facc15,#f97316)"></div></div>
+        </div>
+      </div>
+
+      <!-- Insight cards -->
+      <div class="section-label mb-3">AI Recommendations</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+        <div class="ai-card">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-5 h-5 rounded-md flex items-center justify-center" style="background:rgba(239,68,68,0.15)">
+              <i class="fa-solid fa-fire text-red-400 text-xs"></i>
+            </div>
+            <span class="text-xs font-bold text-red-400 uppercase tracking-wide">Alert</span>
+          </div>
+          <p class="text-sm text-zinc-100 font-semibold leading-snug">3 students with 5+ late check-ins</p>
+          <p class="text-xs text-zinc-500 mt-1.5 leading-relaxed">Recommend individual counselling sessions before violations escalate.</p>
+          <button class="mt-3 text-xs text-orange-400 hover:text-orange-300 font-medium flex items-center gap-1.5 transition-colors" onclick="showToast('Counselling report generated for 3 students', 'info')">
+            Generate Report <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+        <div class="ai-card">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-5 h-5 rounded-md flex items-center justify-center" style="background:rgba(34,197,94,0.15)">
+              <i class="fa-solid fa-chart-line text-green-400 text-xs"></i>
+            </div>
+            <span class="text-xs font-bold text-green-400 uppercase tracking-wide">Positive Trend</span>
+          </div>
+          <p class="text-sm text-zinc-100 font-semibold leading-snug">Mess attendance up 11% this week</p>
+          <p class="text-xs text-zinc-500 mt-1.5 leading-relaxed">Correlates with the new Saturday special menu. Worth continuing.</p>
+          <button class="mt-3 text-xs text-orange-400 hover:text-orange-300 font-medium flex items-center gap-1.5 transition-colors" onclick="showToast('Mess analytics exported', 'success')">
+            View Analytics <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+        <div class="ai-card">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-5 h-5 rounded-md flex items-center justify-center" style="background:rgba(234,179,8,0.15)">
+              <i class="fa-solid fa-wrench text-yellow-400 text-xs"></i>
+            </div>
+            <span class="text-xs font-bold text-yellow-400 uppercase tracking-wide">Maintenance</span>
+          </div>
+          <p class="text-sm text-zinc-100 font-semibold leading-snug">Plumbing surge predicted — Floor 2</p>
+          <p class="text-xs text-zinc-500 mt-1.5 leading-relaxed">90-day complaint pattern signals a likely breakage in 2–3 weeks.</p>
+          <button class="mt-3 text-xs text-orange-400 hover:text-orange-300 font-medium flex items-center gap-1.5 transition-colors" onclick="showToast('Maintenance team alerted', 'success')">
+            Schedule Check <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+        <div class="ai-card">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-5 h-5 rounded-md flex items-center justify-center" style="background:rgba(249,115,22,0.15)">
+              <i class="fa-solid fa-indian-rupee-sign text-orange-400 text-xs"></i>
+            </div>
+            <span class="text-xs font-bold text-orange-400 uppercase tracking-wide">Finance</span>
+          </div>
+          <p class="text-sm text-zinc-100 font-semibold leading-snug">28 students likely to miss fee deadline</p>
+          <p class="text-xs text-zinc-500 mt-1.5 leading-relaxed">ML confidence 82%. SMS reminders now would reduce defaults by ~40%.</p>
+          <button class="mt-3 text-xs text-orange-400 hover:text-orange-300 font-medium flex items-center gap-1.5 transition-colors" onclick="showToast('SMS reminders queued for 28 students', 'success')">
+            Send Reminders <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Prediction bar -->
+      <div class="note-box flex items-center gap-3">
+        <i class="fa-solid fa-brain text-orange-400 text-xl flex-shrink-0"></i>
+        <div>
+          <p class="text-sm font-semibold text-zinc-100">30-day occupancy forecast</p>
+          <p class="text-xs text-zinc-500 mt-0.5 leading-relaxed">Expect <span class="text-yellow-400 font-medium">+4 vacancies</span> in Block C by Jul 15. Pre-allocate from waitlist now to maintain &gt;90% target.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="flex gap-3">
+        <button class="btn-secondary flex-1" onclick="closeModal('aiinsight')">Close</button>
+        <button class="btn-primary flex-1" onclick="closeModal('aiinsight'); showToast('Full AI report emailed to dr.singh@muj.edu', 'success')">
+          <i class="fa-solid fa-envelope mr-2"></i>Email Full Report
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ PARENT AI SUMMARY MODAL ══ -->
+<div id="modal-parentai" class="modal-overlay hidden" onclick="outsideClick(event,'parentai')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-accent-bar" style="background:linear-gradient(90deg,#fb923c,#f97316,#fb923c);background-size:200%;animation:gradShift 3s ease infinite;"></div>
+    <div class="modal-header">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(220,38,38,0.12));">
+            <i class="fa-solid fa-sparkles text-orange-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-semibold text-white text-base">AI Weekly Summary</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">Arjun Rathore · Week of Jun 9–13, 2026</p>
+          </div>
+        </div>
+        <button onclick="closeModal('parentai')" class="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all" style="transition:all 0.2s">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="rounded-xl p-4 mb-5" style="background: linear-gradient(135deg, rgba(249,115,22,0.09), rgba(59,130,246,0.04)); border: 1px solid rgba(249,115,22,0.2);">
+        <p class="text-sm text-zinc-300 leading-relaxed">
+          Your ward <strong class="text-white">Arjun</strong> had a <span class="text-green-400 font-semibold">positive week</span> overall. Present in the hostel all 5 weekdays with regular timings. Mess attendance was <span class="text-orange-400 font-semibold">88%</span> — above his monthly average of 84%.
+        </p>
+      </div>
+
+      <div class="space-y-2.5">
+        <div class="flex items-start gap-3 bg-zinc-900 rounded-xl p-3.5 border border-zinc-800 hover:border-green-500/25 transition-colors">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.12)">
+            <i class="fa-solid fa-check text-green-400 text-xs"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">Gate pass used responsibly</p>
+            <p class="text-xs text-zinc-500 mt-0.5">Returned by 10:15 PM on Jun 12 — 15 min before curfew.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-zinc-900 rounded-xl p-3.5 border border-zinc-800 hover:border-green-500/25 transition-colors">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.12)">
+            <i class="fa-solid fa-check text-green-400 text-xs"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">No disciplinary flags this week</p>
+            <p class="text-xs text-zinc-500 mt-0.5">Zero late check-ins, noise complaints, or violations recorded.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-zinc-900 rounded-xl p-3.5 border border-yellow-500/15 hover:border-yellow-500/30 transition-colors">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(234,179,8,0.12)">
+            <i class="fa-solid fa-triangle-exclamation text-yellow-400 text-xs"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">Pending complaint — water leakage</p>
+            <p class="text-xs text-zinc-500 mt-0.5">Raised Jun 11, currently under review by maintenance team.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-zinc-900 rounded-xl p-3.5 border border-red-500/15 hover:border-red-500/25 transition-colors">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(239,68,68,0.12)">
+            <i class="fa-solid fa-indian-rupee-sign text-red-400 text-xs"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-zinc-200">Fee payment pending</p>
+            <p class="text-xs text-zinc-500 mt-0.5">₹18,400 due by July 15. Kindly ensure timely payment.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-xs text-zinc-700 text-center mt-5">AI-generated summary. Contact warden for official records.</p>
+    </div>
+    <div class="modal-footer">
+      <div class="flex gap-3">
+        <button class="btn-secondary flex-1" onclick="closeModal('parentai')">Close</button>
+        <button class="btn-primary flex-1" onclick="closeModal('parentai'); showToast('Summary downloaded as PDF', 'success')">
+          <i class="fa-solid fa-download mr-2"></i>Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SUCCESS CONFIRMATION MODAL ══ -->
+<div id="modal-success" class="modal-overlay hidden" onclick="outsideClick(event,'success')">
+  <div class="modal-box" style="max-width:400px;" onclick="event.stopPropagation()">
+    <div class="p-8 text-center">
+      <div class="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center success-icon" style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);">
+        <i class="fa-solid fa-check text-green-400 text-2xl"></i>
+      </div>
+      <h2 class="font-display text-xl font-bold text-white mb-2" id="success-title">Done!</h2>
+      <p class="text-sm text-zinc-400 leading-relaxed" id="success-message">Your request has been submitted.</p>
+      <div class="mt-6 p-3 bg-zinc-900 rounded-xl border border-zinc-800 text-xs text-zinc-500" id="success-detail"></div>
+      <button class="btn-primary w-full mt-5" onclick="closeModal('success')">
+        <i class="fa-solid fa-check mr-2"></i>Got it
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+  /* ──────────────── Role Switcher ──────────────── */
+  const roles = ['student', 'warden', 'parent'];
+  let currentRole = 'student';
+  const avatarTexts = { student: 'AR', warden: 'RS', parent: 'PR' };
+  const avatarColors = {
+    student: 'linear-gradient(135deg, #f97316, #dc2626)',
+    warden: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+    parent: 'linear-gradient(135deg, #22c55e, #16a34a)'
+  };
+  const roleLabels = { student: 'Student View', warden: 'Warden Admin', parent: 'Parent View' };
+
+  function switchRole(role) {
+    if (role === currentRole) return;
+    currentRole = role;
+
+    // Flash overlay for visual "switch" feedback
+    const flash = document.createElement('div');
+    flash.className = 'role-flash';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 350);
+
+    // Hide all dashboards
+    roles.forEach(r => {
+      const d = document.getElementById(`dashboard-${r}`);
+      d.classList.add('hidden');
+      d.classList.remove('animate-role-in');
+      ['', '-m'].forEach(sfx => {
+        const b = document.getElementById(`btn-${r}${sfx}`);
+        if (b) b.classList.remove('active');
+      });
+    });
+
+    // Show new dashboard
+    const d = document.getElementById(`dashboard-${role}`);
+    d.classList.remove('hidden');
+    void d.offsetWidth;
+    d.classList.add('animate-role-in');
+
+    // Activate buttons
+    ['', '-m'].forEach(sfx => {
+      const b = document.getElementById(`btn-${role}${sfx}`);
+      if (b) b.classList.add('active');
+    });
+
+    // Update avatar
+    const av = document.getElementById('nav-avatar');
+    av.textContent = avatarTexts[role];
+    av.style.background = avatarColors[role];
+
+    // Toast the switch
+    showToast(`Switched to ${roleLabels[role]}`, 'info');
+
+    if (role === 'warden') setTimeout(initCharts, 150);
+  }
+
+
+  /* ──────────────── Modal System ──────────────── */
+  function openModal(name) {
+    const el = document.getElementById(`modal-${name}`);
+    if (el) {
+      el.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeModal(name) {
+    const el = document.getElementById(`modal-${name}`);
+    if (el) {
+      el.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function outsideClick(e, name) {
+    if (e.target === document.getElementById(`modal-${name}`)) closeModal(name);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      ['complaint','leave','gatepass','payment','aiinsight','parentai','success'].forEach(m => {
+        const el = document.getElementById(`modal-${m}`);
+        if (el && !el.classList.contains('hidden')) closeModal(m);
+      });
+    }
+  });
+
+
+  /* ──────────────── Forms ──────────────── */
+  const successData = {
+    complaint: {
+      title: 'Complaint Submitted!',
+      message: 'Your complaint has been logged and forwarded to the warden. You\'ll receive an update within 24 hours.',
+      detail: '🎫 Ticket #CP-2891 created · Priority: Medium · Category: Plumbing / Water'
+    },
+    leave: {
+      title: 'Leave Requested!',
+      message: 'Your leave application has been sent for warden approval. Your parent will be notified by SMS on approval.',
+      detail: '📋 Application #LR-0447 submitted · Estimated review: 2–4 hours'
+    },
+    gatepass: {
+      title: 'Gate Pass Generated!',
+      message: 'Your digital gate pass is ready. Show the QR code at the main gate when exiting.',
+      detail: '🔑 Pass #GP-4823 · Valid until return time · Warden notified automatically'
+    },
+    payment: {
+      title: 'Payment Initiated!',
+      message: 'Your payment of ₹18,400 is being processed. A receipt will be sent to your registered email.',
+      detail: '💳 Transaction #TXN-8847-MUJ · Processing time: 1–2 minutes'
+    },
+  };
+
+  function submitForm(type) {
+    closeModal(type);
+    const d = successData[type];
+    if (d) {
+      document.getElementById('success-title').textContent = d.title;
+      document.getElementById('success-message').textContent = d.message;
+      document.getElementById('success-detail').textContent = d.detail;
+      setTimeout(() => openModal('success'), 120);
+    } else {
+      showToast('Action completed successfully!', 'success');
+    }
+  }
+
+
+  /* ──────────────── Priority Buttons ──────────────── */
+  function setPriority(btn, level) {
+    const wrap = btn.closest('.flex');
+    wrap.querySelectorAll('.prio-btn').forEach(b => {
+      b.className = 'prio-btn';
+      const colors = {
+        'Low': 'rgba(34,197,94,0.3)',
+        'Medium': 'rgba(234,179,8,0.4)',
+        'High': 'rgba(239,68,68,0.3)'
+      };
+      const textCols = { 'Low': '#4ade80', 'Medium': '#facc15', 'High': '#f87171' };
+      const txt = b.textContent.trim().replace(/^[^\w]*/, '');
+      b.style.borderColor = colors[txt] || 'rgba(249,115,22,0.3)';
+      b.style.color = textCols[txt] || '#fb923c';
+      b.style.background = 'transparent';
+    });
+    btn.classList.add(`active-${level}`);
+  }
+
+
+  /* ──────────────── Payment Method Toggle ──────────────── */
+  function selectPayMethod(btn) {
+    btn.closest('.grid').querySelectorAll('.pay-method').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+
+  /* ──────────────── Toast ──────────────── */
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const icons = {
+      success: '<i class="fa-solid fa-circle-check text-green-400 text-lg flex-shrink-0"></i>',
+      error:   '<i class="fa-solid fa-circle-xmark text-red-400 text-lg flex-shrink-0"></i>',
+      info:    '<i class="fa-solid fa-circle-info text-blue-400 text-lg flex-shrink-0"></i>',
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type} toast-in`;
+    toast.innerHTML = `
+      ${icons[type] || icons.info}
+      <div class="flex-1 min-w-0">
+        <p class="text-sm text-zinc-100 font-medium leading-snug">${message}</p>
+      </div>
+      <button onclick="dismissToast(this)" class="text-zinc-600 hover:text-zinc-400 transition-colors flex-shrink-0 ml-1">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    `;
+
+    container.appendChild(toast);
+    // Limit to 5 toasts
+    const toasts = container.querySelectorAll('.toast');
+    if (toasts.length > 5) toasts[0].remove();
+
+    setTimeout(() => fadeToast(toast), 4500);
+  }
+
+  function dismissToast(btn) { fadeToast(btn.closest('.toast')); }
+  function fadeToast(toast) {
+    if (!toast || !toast.parentElement) return;
+    toast.classList.remove('toast-in');
+    toast.classList.add('toast-out');
+    setTimeout(() => toast.remove(), 280);
+  }
+
+
+  /* ──────────────── Charts ──────────────── */
+  let chartsInited = false;
+
+  function initCharts() {
+    if (chartsInited) return;
+    chartsInited = true;
+
+    const chartDefaults = {
+      plugins: {
+        legend: { labels: { color: '#71717a', font: { size: 11, family: 'Inter' }, boxWidth: 12, boxHeight: 2 } },
+        tooltip: { backgroundColor: '#1a1a1d', borderColor: '#3f3f46', borderWidth: 1, titleColor: '#f4f4f5', bodyColor: '#a1a1aa', padding: 12, cornerRadius: 10 }
+      }
+    };
+
+    // Occupancy chart
+    const oCtx = document.getElementById('occupancyChart');
+    if (oCtx) {
+      new Chart(oCtx, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Occupied Rooms',
+            data: [295, 302, 308, 299, 312, 310, 312],
+            borderColor: '#f97316',
+            backgroundColor: 'rgba(249,115,22,0.07)',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#f97316',
+            pointBorderColor: '#09090b',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.42,
+            fill: true,
+          }, {
+            label: 'Capacity',
+            data: [360, 360, 360, 360, 360, 360, 360],
+            borderColor: '#3f3f46',
+            borderWidth: 1.5,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            tension: 0,
+            fill: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          ...chartDefaults,
+          scales: {
+            x: { grid: { color: '#1f1f23', drawBorder: false }, ticks: { color: '#71717a', font: { size: 11 } } },
+            y: { min: 250, max: 380, grid: { color: '#1f1f23', drawBorder: false }, ticks: { color: '#71717a', font: { size: 11 }, stepSize: 30 } }
+          }
+        }
+      });
+    }
+
+    // Complaints doughnut
+    const cCtx = document.getElementById('complaintsChart');
+    if (cCtx) {
+      new Chart(cCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Plumbing', 'Electrical', 'WiFi / IT', 'Other'],
+          datasets: [{
+            data: [5, 4, 3, 2],
+            backgroundColor: ['#f97316', '#60a5fa', '#4ade80', '#c084fc'],
+            borderColor: '#18181b',
+            borderWidth: 3,
+            hoverOffset: 7,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '70%',
+          plugins: {
+            legend: { display: false },
+            tooltip: chartDefaults.plugins.tooltip,
+          }
+        }
+      });
+    }
+  }
+
+
+  /* ──────────────── QR Code ──────────────── */
+  function buildFakeQR() {
+    const qr = document.getElementById('fake-qr');
+    if (!qr) return;
+    const size = 9;
+    const corner = (r, c) =>
+      (r < 3 && c < 3) || (r < 3 && c >= size - 3) || (r >= size - 3 && c < 3);
+    const cells = [];
+    for (let i = 0; i < size * size; i++) {
+      const r = Math.floor(i / size), c = i % size;
+      const dark = corner(r, c) ? true : Math.random() > 0.42;
+      cells.push(`<div style="width:9px;height:9px;border-radius:1.5px;background:${dark ? '#e4e4e7' : 'rgba(168,85,247,0.08)'}"></div>`);
+    }
+    qr.style.display = 'grid';
+    qr.style.gridTemplateColumns = `repeat(${size}, 9px)`;
+    qr.style.gap = '1.5px';
+    qr.innerHTML = cells.join('');
+  }
+
+
+  /* ──────────────── Init ──────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    buildFakeQR();
+  });
+</script>
+
+</body>
+</html>
